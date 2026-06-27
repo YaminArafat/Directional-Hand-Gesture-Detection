@@ -4,3 +4,5 @@ matplotlib
 scikit-learn
 ipykernel
 mlxtend
+mlflow
+tensorboard
