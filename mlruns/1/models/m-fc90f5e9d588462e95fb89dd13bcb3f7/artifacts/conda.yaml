@@ -1,0 +1,11 @@
+channels:
+- conda-forge
+dependencies:
+- python=3.10.11
+- pip<=23.0.1
+- pip:
+  - mlflow==3.14.0
+  - cloudpickle==3.1.2
+  - numpy==2.2.6
+  - tensorflow==2.21.0
+name: mlflow-env

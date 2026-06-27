@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  telemetry_db:
+    image: postgres:16-alpine
+    container_name: gesture_telemetry_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: gesture_telemetry
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - telemetry_network
+
+volumes:
+  pgdata:
+
+networks:
+  telemetry_network:
+    driver: bridge
