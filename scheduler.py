@@ -1,5 +1,6 @@
 import os
 import time
+from fastapi import requests
 import pandas as pd
 import numpy as np
 import tensorflow as tf
@@ -159,6 +160,8 @@ def execute_automated_retraining_pipeline():
         tflite_path = "./models/retrained_production_model.tflite"
         with open(tflite_path, "wb") as f:
             f.write(tflite_model)
+
+        requests.post('http://127.0.0.1:8000/api/v1/analytics/refresh')
             
         mlflow.log_artifact(tflite_path, artifact_path="deployed_production_models")
         # os.remove(tflite_path)

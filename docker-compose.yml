@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  telemetry_db:
+  postgres_db:
     image: postgres:16-alpine
     container_name: gesture_telemetry_db
     environment:
@@ -12,6 +12,21 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - telemetry_network
+
+  web_api:
+    build: .
+    container_name: gesture_telemetry_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data_lake_storage:/app/data_lake_storage
+      - ./models:/app/models
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@postgres_db:5432/gesture_telemetry
+    depends_on:
+      - postgres_db
     networks:
       - telemetry_network
 

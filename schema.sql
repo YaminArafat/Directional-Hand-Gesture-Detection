@@ -12,6 +12,7 @@ CREATE TABLE gesture_inference_logs (
     predicted_gesture_id INT NOT NULL,
     confidence_score REAL NOT NULL,
     inference_latency_ms REAL NOT NULL,
+    raw_data_key VARCHAR(255) NOT NULL,
     logged_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id, logged_at)
 ) PARTITION BY RANGE (logged_at);
@@ -25,9 +26,11 @@ CREATE TABLE logs_2026_07 PARTITION OF gesture_inference_logs
 -- 2. DEDICATED AUDIT POOL TABLE (For low confidence observations)
 CREATE TABLE low_confidence_audit (
     audit_id SERIAL PRIMARY KEY,
+    log_id BIGINT,
     device_id VARCHAR(255),
     predicted_gesture_id INT,
     confidence_score REAL,
+    raw_data_key VARCHAR(255) NOT NULL,
     inference_latency_ms REAL,
     flagged_reason TEXT,
     logged_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -36,9 +39,12 @@ CREATE TABLE low_confidence_audit (
 -- 3. AUTOMATED RETRAINING DATA POOL TABLE (For highly accurate structural vectors)
 CREATE TABLE high_confidence_retrain_pool (
     pool_id SERIAL PRIMARY KEY,
+    log_id BIGINT,
     device_id VARCHAR(255),
     predicted_gesture_id INT,
     confidence_score REAL,
+    raw_data_key VARCHAR(255) NOT NULL,
+    inference_latency_ms REAL,
     is_processed BOOLEAN DEFAULT FALSE,
     inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
